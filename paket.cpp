@@ -1,6 +1,6 @@
-#include <iostream>
-#include <conio.h>
-#include <windows.h>
+#include<iostream>
+#include<conio.h>
+#include<windows.h>
 
 void gotoxy(int x, int y)
 {
@@ -10,26 +10,18 @@ void gotoxy(int x, int y)
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),coord);
 }
 
-using namespace std;
 
+using namespace std;
 struct paket
 {
-    char nama[30];
-    char kota[30];
+    char jenis_brg[30];
     int berat;
+    char kota[30];
 };
 
-struct paket kirim [5];
-int datake=1;
+struct paket kirim[100];
 
-bool isEmpty() {
-  return datake == 1;
-}
-
-bool isFull() {
-	return datake == 6;
-}
-
+/*******************************************/
 void bersihlayar()
 {
     for(int a=0;a<80;a++)
@@ -41,77 +33,97 @@ void bersihlayar()
     }
 }
 
-
-void tampildata()
+void tambahdata(int x)
 {
-    cout<<endl;
-    for (int x=datake; x>1; x--)
-    {
-        cout<<x<<". Nama  = " << kirim[x].nama<< endl;
-        cout<<"   Kota  = " <<kirim[x].kota<< endl;
-        cout<<"   Berat = " <<kirim[x].berat<<endl;
-        cout << endl;
-    }
-    cout<<endl;
+    gotoxy(20,15);cout<<"Inputkan Jenis Barang    :";
+    cin>>kirim[x].jenis_brg;
+    gotoxy(20,16);cout<<"Inputkan Berat           :";
+    cin>>kirim[x].berat;
+    gotoxy(20,17);cout<<"Inputkan Kota Tujuan     :";
+    cin>>kirim[x].kota;
 }
 
-void push()
-{   if (isFull()) {
-    cout << endl;
-		cout << "\nTumpukan penuh"<<endl;
-	}else {
-	    cout << endl;
-    cout<<"Inputkan nama  : ";
-    cin>>kirim[datake].nama;
-    cout<<"Inputkan kota : ";
-    cin>>kirim[datake].kota;
-    cout<<"Inputkan berat : ";
-    cin>>kirim[datake].berat;
-    datake++;
-    cout << endl;}
-
-
-}
-
-move()
+void tampildata(int x)
 {
-    for(int z=2;z<datake;z++)
+    gotoxy(40,10);cout<<"Daftar Kiriman Paket"<<endl;
+    for(int a=1; a<x; a++)
     {
-        kirim[z-1]=kirim[z];
+        gotoxy(40,19-a);
+        cout<<a<<" ";
+        cout<<kirim[a].jenis_brg<<" ";
+        cout<<kirim[a].berat<<" ";
+        cout<<kirim[a].kota<<endl;
     }
-}
-
-void pop()
-{   if (isEmpty()) {
-        cout << endl;
-		cout << "\nTumpukan kosong"<<endl;
-	} else {
-	    cout << endl;
-    cout<<"Hasil pop "<<endl;
-    cout<<" Nama  = " << kirim[1].nama<< endl;
-    cout<<" Kota  = " << kirim[1].kota<< endl;
-    cout<<" Berat = " << kirim[1].berat<<endl;
-    datake--;
-    cout<<"Press any key to continue";
+    gotoxy(40,20);
+    cout<<"Press Any Key...";
     getch();
-    cout<<endl;}
+    /*harus Ijin --> #include<conio.h>*/
 }
 
+void hapusdata(int x)
+{
+    gotoxy(40,12);cout<<"Data Terakhir yang anda Hapus Adalah :"<<endl;
+    gotoxy(40,13);cout<<kirim[x].jenis_brg<<" ";
+    cout<<kirim[x].berat<<" Kg ";
+    cout<<kirim[x].kota<<endl<<endl;
+
+    gotoxy(40,15);cout<<"Press Any Key...";
+    getch();
+
+
+}
 
 int main()
 {
     int pilih;
+    int datake=1;
     do
     {
+        bersihlayar();
+        gotoxy(1,1);cout<<"MENU UTAMA";
+        gotoxy(1,2);cout<<"1. Tambah Data";
+        gotoxy(1,3);cout<<"2. Hapus Data Terakhir"<<endl;
+        gotoxy(1,4);cout<<"3. Tampil Data"<<endl;
+        gotoxy(1,5);cout<<"9. Keluar"<<endl;
 
-        tampildata();
-        cout<<"1. push "<<endl;
-        cout<<"2. pop "<<endl;
-        cout<<"9. Exit"<<endl;
-        cout<<"pilihan anda[1-9] :";
+        gotoxy(1,7);cout<<"Pilihan Anda [1-9] : ";
         cin>>pilih;
-        if (pilih==1) push();
-        if (pilih==2) pop();
+        switch (pilih)
+        {
+        case 1:
+            cout << "============\n";
+            if(datake <= 5)
+            { /*Menambah data baru diletakan di DATAKE*/
+                tambahdata(datake);
+                datake++;
+            }
+            else
+            {
+             cout << "Stack is FULL!" << endl;
+            }
+            cout << "=============\n";
+            break;
+        case 2:
+            cout << "=============\n";
+            if(datake > 1)
+            { /*Menghapus Data Terakhir (DATAKE-1*/
+                hapusdata(datake-1);
+                datake--;
+            }
+            else
+            {
+                cout << "Stack EMPTY!" << endl;
+            }
+            cout << "=============\n";
+            break;
+        case 3:
+            cout << "=============\n";
+        /*Menampilkan Data mulai
+                        data ke-1 hingga DATAKE*/
+            tampildata(datake);
+            cout << "=============\n";
+            break;
+        }
     }
     while(pilih!=9);
     return 0;
